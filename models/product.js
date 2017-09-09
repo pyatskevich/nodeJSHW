@@ -1,5 +1,6 @@
-const Product = function () {
-    console.log('product');
+class Product {
+    constructor() {
+        console.log('product');
+    }
 }
-
 module.exports = Product;

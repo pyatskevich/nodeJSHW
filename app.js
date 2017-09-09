@@ -1,5 +1,5 @@
-const config = require('./config/config.json');
-const { User, Product } = require('./models');
+import config  from '../config/config.json';
+import { User, Product }  from '../models';
 console.log(config.name);
 
 const user = new User();

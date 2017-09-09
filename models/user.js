@@ -1,5 +1,7 @@
-const User = function () {
-    console.log('user');
+class User {
+    constructor() {
+        console.log('user');
+    }
 }
 
 module.exports = User;
