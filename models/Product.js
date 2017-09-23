@@ -3,4 +3,4 @@ class Product {
         console.log('product');
     }
 }
-module.exports = Product;
+export default Product;
