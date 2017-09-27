@@ -1,12 +1,10 @@
 'use strict';
 import fs from 'fs';
-import EventEmitter from 'events';
 
-class DirWatcher extends EventEmitter {
-    watch = (path, delay) => {
-        fs.watchFile( path, { interval: delay }, function ( curr, prev ) {
-
-            console.info('file changes');
+class DirWatcher {
+    watch = (path, delay, callback) => {
+        fs.watchFile( path, { interval: delay }, () => {
+            callback(path);
         });
     };
 }

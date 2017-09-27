@@ -1,22 +1,21 @@
 "use strict";
 
 import fs from 'fs';
-import csvParse from 'csv-parse';
+class Importer{
 
-class Importer {
+    import = async (path) => {
+         return await fs.readFile(path, 'utf8', (err, data) => {
 
-    import = async () => {
-         await fs.readFile('data/MOCK_DATA.CSV', 'utf8', (err, data) => {
-
-            if(err) throw err;
-            const result = data.split('\n')
+             console.info('import file after change');
+             if(err) throw err;
+             const result = data.split('\n')
                 .map(str => str.split(','));
-            return result;
+             return result;
         });
 
     };
-    importSync = () => {
-        const result = fs.readFileSync('data/MOCK_DATA.CSV', 'utf8').split('\n')
+    importSync = (path) => {
+        fs.readFileSync(path, 'utf8').split('\n')
             .map(str => str.split(','));
     };
 }
