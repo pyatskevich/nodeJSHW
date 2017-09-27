@@ -1,6 +1,8 @@
+'use strict';
+
 class User {
     constructor() {
-        console.log('user');
+
     }
 }
 
