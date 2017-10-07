@@ -1,6 +1,8 @@
-const config = require('./config/config.json');
-const { User, Product } = require('./models');
+"use strict";
+
+import config  from './config/config.json';
+import models  from './models';
 console.log(config.name);
 
-const user = new User();
-const product = new Product();
+const user = new models.User();
+const product = new models.Product();

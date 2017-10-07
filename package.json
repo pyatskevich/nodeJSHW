@@ -5,14 +5,17 @@
   "main": "app.js",
   "scripts": {
     "test": "test",
-    "start": "babel-node app.js --presets es2015,stage-2"
+    "build": "babel -d build app.js",
+    "start": "node index.js"
   },
   "author": "Pavel",
   "license": "ISC",
   "devDependencies": {
     "babel": "^6.23.0",
+    "babel-cli": "^6.26.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
-    "babel-register": "^6.26.0"
+    "babel-register": "^6.26.0",
+    "nodemon": "^1.12.1"
   }
 }
