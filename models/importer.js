@@ -1,9 +1,8 @@
-"use strict";
 
 import fs from 'fs';
 class Importer{
 
-    import = async (path) => {
+    importAsync = async (path) => {
          return await fs.readFile(path, 'utf8', (err, data) => {
 
              console.info('import file after change');
