@@ -21,7 +21,10 @@
   },
   "dependencies": {
     "commander": "^2.11.0",
+    "csv-to-json": "^0.1.2",
+    "csvtojson": "^1.1.9",
     "request": "^2.83.0",
+    "simple-csv2json": "^1.0.1",
     "split": "^1.0.1",
     "through2": "^2.0.3"
   }
