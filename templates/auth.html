@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<form action="" name="login-form">
+    <input type="text" name="username" value="name"/>
+    <input type="password" name="password" value="test"/>
+    <button type="submit">Войти</button>
+</form>
+
+<script>
+    $(document.forms['login-form']).on('submit', () => {
+        var form = $(this);
+console.log("form.serialize()", form.serialize());
+        $.ajax({
+            url: '/auth',
+            method: 'POST',
+            data: {username: "Pavel", password: "secret"},
+            complete: () => {
+
+            },
+
+            // statusCode: {
+            //     200:
+            // }
+        })
+
+        return false;
+    })
+</script>
+</body>
+</html>
