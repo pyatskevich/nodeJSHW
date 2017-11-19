@@ -1,21 +1,18 @@
 const fs = require('fs');
 const _ = require('lodash');
 const express = require('express');
-//const routes = require('./routes');
-//const user = require('./routes/user');
 const http = require('http');
-const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const Strategy  = require('passport-local').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
 const jwt = require('jsonwebtoken');
+const models = require('./models');
+const csv = require('csvtojson')
 
 const app = express();
-
 app.set('port', 3000);
-
 http.createServer(app).listen(app.get('port'), () => {
     console.info(app.get('port'));
 });
@@ -42,23 +39,42 @@ app.use(bodyParser());
 app.use(cookieParser());
 
 
-app.get('/', checkToken, function(reg, res, next) {
-    res.end('products');
+app.get('/', checkToken, function(req, res, next) {
+    models.products.findAll().then(products => {
+        res.end(JSON.stringify(products, null, 2));
+    });
 });
-app.get('/products/:id/reviews', function(reg, res, next) {
+app.get('/products/:id/reviews', function(req, res, next) {
     res.end('productsidreviews');
 });
-app.get('/products/:id', function(reg, res, next) {
-    res.end('productsid');
+app.get('/products/:id', function(req, res, next) {
+    models.products.findById(req.params.id).then(products => {
+        res.end(JSON.stringify(products, null, 2));
+    });
 });
-app.get('/products', checkToken, function(reg, res, next) {
-    res.end('getproducts');
+app.get('/products', checkToken, function(req, res, next) {
+    models.products.findAll().then(products => {
+        res.end(JSON.stringify(products, null, 2));
+    });
 });
-app.post('/products', function(reg, res, next) {
+app.get('/uplodadProducts', checkToken, (req, res, next) => {
+    let products = [];
+    csv()
+        .fromFile('./data/MOCK_DATA.csv')
+        .on('json', jsonObj => {
+            products.push(jsonObj);
+        })
+        .on('done',() => {
+            models.products.bulkCreate(products);
+        })
+});
+app.post('/products', function(req, res, next) {
     res.end('postproducts');
 });
 app.get('/users', checkToken, function(reg, res, next) {
-    res.end('users');
+    models.users.findAll().then(users => {
+        res.end(JSON.stringify(users, null, 2));
+    });
 });
 app.get('/auth', function(reg, res, next) {
     fs.readFile('templates/auth.html', 'utf-8', (err, data) => {
@@ -80,9 +96,7 @@ app.post(
             });
         } else {
             const token = jwt.sign({"user": currentUser.username}, 'secret', { expiresIn:3000 });
-            res.cookie('auth', token)
-            //res.send(token);
-
+            res.cookie('auth', token);
             res.json({
                 status: 200,
                 message: "OK",
@@ -93,35 +107,6 @@ app.post(
             });
         }
     });
-
-app.post(
-    '/auth',
-    //passport.authenticate('facebook', { session: false }),
-    function(req, res, next) {
-        const fileData = fs.readFileSync('data/users.json', 'utf-8');
-
-        const currentUser = _.find(JSON.parse(fileData).users, ['username', req.body.username]);
-        if (_.isUndefined(currentUser)) {
-            res.status(404).send({
-                status: 404,
-                message: "NOT FOUND",
-                data: {}
-            });
-        } else {
-            const token = jwt.sign({"user": currentUser.username}, 'secret', { expiresIn:3000 });
-            res.cookie('auth', token)
-            //res.send(token);
-
-            res.json({
-                status: 200,
-                message: "OK",
-                data: {
-                    user: currentUser.username
-                },
-                token
-            });
-        }
-});
 
 // passport.use(new Strategy(
 //     function(username, password, done) {
@@ -142,7 +127,6 @@ passport.use(new FacebookStrategy({
         callbackURL: "http://localhost:3000/auth/facebook/callback"
     },
     function(accessToken, refreshToken, profile, cb) {
-    console.log("111111", JSON.stringify(111111, null, 2));
         User.findOrCreate({ facebookId: profile.id }, function (err, user) {
             return cb(err, user);
         });
@@ -153,10 +137,7 @@ app.get('/auth/facebook',
     passport.authenticate('facebook'));
 
 app.get('/auth/facebook/callback',
-    //passport.authenticate('facebook', { failureRedirect: '/login' }),
     function(req, res) {
-console.info(2222);
-        // Successful authentication, redirect home.
         res.redirect('/');
     });
 
