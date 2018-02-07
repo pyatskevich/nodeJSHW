@@ -9,22 +9,7 @@ const Strategy  = require('passport-local').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
 const jwt = require('jsonwebtoken');
 const models = require('./models');
-const csv = require('csvtojson');
-
-//mongo
-const mongodb = require('mongodb');
-const mongoose = require('mongoose');
-
-const MongoClient = mongodb.MongoClient;
-var db = mongoose.createConnection('mongodb://localhost:27017/nodejs');
-
-var User = new mongoose.Schema({
-    username   : { type: String, required: true }
-    , age     : { type: Number, min: 5, max: 20 }
-});
-mongoose.model('Users', User);
-var Users = db.model('Users');
-
+const csv = require('csvtojson')
 
 const app = express();
 app.set('port', 3000);
@@ -59,51 +44,11 @@ app.get('/', checkToken, function(req, res, next) {
         res.end(JSON.stringify(products, null, 2));
     });
 });
-
-app.get('/cities', async function(req, res, next) {
-    const users = await Users.find();
-    res.end(users.toString())
-});
-
-app.post('/cities', async function(req, res, next) {
-    const result = await Users.collection.save({
-        username: 'test11',
-        age: 50
-    });
-    res.end(result.toString())
-
-});
-app.put('/cities/:id', async function(req, res, next) {
-    const id = req.params.id;
-    const users = await Users.find({id});
-    users.username = 'newName';
-    const result = await Users.collection.update(users);
-    res.end(result.toString());
-
-});
-
-app.delete('/cities/:id', async function(req, res, next) {
-    const id = req.params.id;
-    const users = await Users.find({id});
-    const result = await Users.collection.delete(users);
-    res.end(result.toString());
-
-});
 app.get('/products/:id/reviews', function(req, res, next) {
     res.end('productsidreviews');
 });
 app.get('/products/:id', function(req, res, next) {
     models.products.findById(req.params.id).then(products => {
-        res.end(JSON.stringify(products, null, 2));
-    });
-});
-app.delete('/products/:id', function(req, res, next) {
-    models.products.delete(req.params.id).then(products => {
-        res.end(JSON.stringify(products, null, 2));
-    });
-});
-app.delete('/users/:id', function(req, res, next) {
-    models.users.delete(req.params.id).then(products => {
         res.end(JSON.stringify(products, null, 2));
     });
 });
