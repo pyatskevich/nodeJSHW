@@ -97,11 +97,7 @@ app.get('/products/:id', function(req, res, next) {
         res.end(JSON.stringify(products, null, 2));
     });
 });
-app.delete('/products/:id', function(req, res, next) {
-    models.products.delete(req.params.id).then(products => {
-        res.end(JSON.stringify(products, null, 2));
-    });
-});
+
 app.delete('/users/:id', function(req, res, next) {
     models.users.delete(req.params.id).then(products => {
         res.end(JSON.stringify(products, null, 2));
