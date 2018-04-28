@@ -10,6 +10,8 @@ const FacebookStrategy = require('passport-facebook').Strategy;
 const jwt = require('jsonwebtoken');
 const models = require('./models');
 const csv = require('csvtojson');
+const cors = require('cors');
+const fileUpload = require('express-fileupload');
 
 //mongo
 const mongodb = require('mongodb');
@@ -25,9 +27,8 @@ var User = new mongoose.Schema({
 mongoose.model('Users', User);
 var Users = db.model('Users');
 
-
 const app = express();
-app.set('port', 3000);
+app.set('port', 8888);
 http.createServer(app).listen(app.get('port'), () => {
     console.info(app.get('port'));
 });
@@ -50,10 +51,33 @@ const checkToken = (req, res, next) => {
 
 };
 
+
 app.use(bodyParser());
 app.use(cookieParser());
+app.use(cors({origin: 'http://localhost:3000'}));
+app.use(fileUpload());
 
+app.get('/files', async function(req, res, next) {
+    res.send(['1', '2'])
 
+});
+app.post('/files', async function(req, res, next) {
+    console.log("req.files", req.files);
+    if (!req.files)
+        return res.status(400).send('No files were uploaded.');
+
+    // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
+    let sampleFile = req.files['files[]'];
+
+    // Use the mv() method to place the file somewhere on your server
+    sampleFile.mv(`./files/${sampleFile.name}`, function(err) {
+        console.log("err", err);
+        if (err)
+            return res.status(500).send(err);
+
+        res.send('File uploaded!');
+    });
+});
 app.get('/', checkToken, function(req, res, next) {
     models.products.findAll().then(products => {
         res.end(JSON.stringify(products, null, 2));
@@ -195,3 +219,4 @@ app.get('/auth/facebook/callback',
 app.use((req, res) => {
     res.send(404, 'Page not found')
 });
+
