@@ -2,6 +2,7 @@ const fs = require('fs');
 const _ = require('lodash');
 const express = require('express');
 const http = require('http');
+const https = require('https');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const passport = require('passport');
@@ -29,7 +30,16 @@ var Users = db.model('Users');
 
 const app = express();
 app.set('port', 8888);
-http.createServer(app).listen(app.get('port'), () => {
+
+var key = fs.readFileSync('c:/certificate/key.pem');
+var cert = fs.readFileSync( 'c:/certificate/cert.pem' );
+
+var options = {
+    key: key,
+    cert: cert,
+    passphrase: 'tima'
+};
+https.createServer(options, app).listen(app.get('port'), () => {
     console.info(app.get('port'));
 });
 
@@ -54,15 +64,139 @@ const checkToken = (req, res, next) => {
 
 app.use(bodyParser());
 app.use(cookieParser());
-app.use(cors({origin: 'http://localhost:3000'}));
+app.use(cors({origin: 'https://igoforms-qd1.ipipeline.com'}));
+// app.use(cors({origin: 'http://localhost:3000'}));
 app.use(fileUpload());
 
 app.get('/files', async function(req, res, next) {
-    res.send(['1', '2'])
+    res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+
+    // Request methods you wish to allow
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+    // Request headers you wish to allow
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+
+    // Set to true if you need the website to include cookies in the requests sent
+    // to the API (e.g. in case you use sessions)
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    var data = {files:[{
+            name: 'name1 asd asd asd asd a sd asd',
+            id: 1,
+            displayName: 'dname1 asda sd asd asd asd asd ',
+            description: 'test1 asd asd asd as das das da sd asd',
+            size: 123123,
+            url: 'http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.753.8673&rep=rep1&type=pdf'
+        },{
+            name: 'name3',
+            id: 3,
+            displayName: 'dname3 ',
+            description: 'adfsdf sdfg sd gsdfg  dfg\n' +
+            ' sdfg sdfg dfg dsf\n' +
+            'g \n' +
+            'sd fg sdfg\n' +
+            ' dsfg sdfg',
+            size: 234235245,
+            url: 'http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.753.8673&rep=rep1&type=pdf'
+        },{
+            name: 'name4',
+            id: 4,
+            displayName: 'dname4 ',
+            description: 'test4',
+            size: 234235245,
+            url: 'http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.753.8673&rep=rep1&type=pdf'
+        },
+            {
+                name: 'name2',
+                id: 2,
+                displayName: 'dname2',
+                description: 'test2',
+                size: 123123,
+                url: 'https://www.superzoo.cz/galerie/1_25995/boty-pro-psy-trixie-walker-active-cerne-2ks-xs-s-default.jpg'
+            },{
+                name: 'name1 asd asd asd asd a sd asd',
+                id: 5,
+                displayName: 'dname1 asda sd asd asd asd asd ',
+                description: 'test1 asd asd asd as das das da sd asd',
+                size: 123123,
+                url: 'http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.753.8673&rep=rep1&type=pdf'
+            },{
+                name: 'name3',
+                id: 6,
+                displayName: 'dname3 ',
+                description: 'adfsdf sdfg sd gsdfg  dfg\n' +
+                ' sdfg sdfg dfg dsf\n' +
+                'g \n' +
+                'sd fg sdfg\n' +
+                ' dsfg sdfg',
+                size: 234235245,
+                url: 'http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.753.8673&rep=rep1&type=pdf'
+            },{
+                name: 'name4',
+                id: 7,
+                displayName: 'dname4 ',
+                description: 'test4',
+                size: 234235245,
+                url: 'http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.753.8673&rep=rep1&type=pdf'
+            },
+            {
+                name: 'name2',
+                id: 8,
+                displayName: 'dname2',
+                description: 'test2',
+                size: 123123,
+                url: 'https://www.superzoo.cz/galerie/1_25995/boty-pro-psy-trixie-walker-active-cerne-2ks-xs-s-default.jpg'
+            },{
+                name: 'name1 asd asd asd asd a sd asd',
+                id: 9,
+                displayName: 'dname1 asda sd asd asd asd asd ',
+                description: 'test1 asd asd asd as das das da sd asd',
+                size: 123123,
+                url: 'http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.753.8673&rep=rep1&type=pdf'
+            },{
+                name: 'name3',
+                id: 10,
+                displayName: 'dname3 ',
+                description: 'adfsdf sdfg sd gsdfg  dfg\n' +
+                ' sdfg sdfg dfg dsf\n' +
+                'g \n' +
+                'sd fg sdfg\n' +
+                ' dsfg sdfg',
+                size: 234235245,
+                url: 'http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.753.8673&rep=rep1&type=pdf'
+            },{
+                name: 'name4',
+                id: 11,
+                displayName: 'dname4 ',
+                description: 'test4',
+                size: 234235245,
+                url: 'http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.753.8673&rep=rep1&type=pdf'
+            },
+            {
+                name: 'name2',
+                id: 12,
+                displayName: 'dname2',
+                description: 'test2',
+                size: 123123,
+                url: 'https://www.superzoo.cz/galerie/1_25995/boty-pro-psy-trixie-walker-active-cerne-2ks-xs-s-default.jpg'
+            }]};
+    data.files = _.shuffle(data.files)
+    res.send(JSON.stringify(data))
 
 });
 app.post('/files', async function(req, res, next) {
-    console.log("req.files", req.files);
+    res.setHeader('Access-Control-Allow-Origin', '*');
+
+    // Request methods you wish to allow
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+    // Request headers you wish to allow
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+
+    // Set to true if you need the website to include cookies in the requests sent
+    // to the API (e.g. in case you use sessions)
+    res.setHeader('Access-Control-Allow-Credentials', true);
     if (!req.files)
         return res.status(400).send('No files were uploaded.');
 
@@ -75,9 +209,32 @@ app.post('/files', async function(req, res, next) {
         if (err)
             return res.status(500).send(err);
 
-        res.send('File uploaded!');
+        res.send(JSON.stringify({success:'File uploaded!'}));
     });
 });
+
+app.post('/deletefile', async function(req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+
+    // Request methods you wish to allow
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+    // Request headers you wish to allow
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+
+    // Set to true if you need the website to include cookies in the requests sent
+    // to the API (e.g. in case you use sessions)
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    res.send({files:[{
+            name: '2',
+            id: 2,
+            displayName: 'name2',
+            description: 'test2',
+            size: 123123,
+            url: 'localhost:8888/files/lesson2.pdf'
+        }]})
+});
+
 app.get('/', checkToken, function(req, res, next) {
     models.products.findAll().then(products => {
         res.end(JSON.stringify(products, null, 2));
